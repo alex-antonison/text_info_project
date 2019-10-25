@@ -1,0 +1,22 @@
+{
+    "september-17-2019-american-eagle-mine-kanawha-county-wv" : {
+        "date" : "2019-09-17",
+        "location" : "American Eagle Mine, Kanawha County, WV",
+        "mine-controller" : "Blackhawk Mining LLC",
+        "mine-type" : "Underground",
+        "mined-mineral" : " Coal (Bituminous)",
+        "preliminary-report" : "An electrician was electrocuted while troubleshooting the electrical circuit for the scrubber on a continuous mining machine. He was working on the Number 1 Section, 007-0 MMU when the accident occurred. The information provided in this notice is based on preliminary data ONLY and does not represent final determination regarding the nature of the incident or conclusions regarding the cause of the accident.",
+        "fatality-report" : "COAL MINE FATALITY – On September 17, 2019, an electrician was electrocuted when he contacted an energized conductor. The victim contacted a 995 VAC connector while attempting to troubleshoot the scrubber motor circuit on a continuous mining machine.",
+        "public-notice" : "This posting serves to provide a public notice to employees of the mine, employees of the mining company(s), employees of independent contractors with any connection to the mine, persons with any connection to the mine, and any person with information regarding the cause or contributing factors of this accident. Please provide any information to: Larry Hedrick , Lead Investigator:  Phone: 304-877-3900 ext. 212"
+    },
+    "september-5-2019-cardinal-mine-hopkins-county-ky" : {
+        "date" : "2019-09-05",
+        "location" : "Cardinal Mine, Hopkins County, KY",
+        "mine-controller" : "Alliance Resource Partners LP",
+        "mine-type" : "Underground",
+        "mined-mineral" : " Coal (Bituminous)",
+        "preliminary-report" : "A continuous mining machine helper was fatally injured when he was struck by a battery-powered scoop.  The victim was in the #3 entry behind a wing curtain that provided ventilation to the #3 right crosscut that was being mined.  A scoop, carrying roof bolting supplies, was trammed through the #3 left crosscut, and struck the victim as it made a right-hand turn and passed through the wing curtain.",
+        "fatality-report" : "MINE FATALITY ALERT – On September 5, 2019, a continuous mining machine helper was fatally injured when he was struck by a battery-powered scoop. The victim was in the #3 entry behind a wing curtain that provided ventilation to the #3 right crosscut being mined. The scoop was trammed through the #3 left crosscut and struck the victim as it made a right-hand turn and passed through the wing curtain.",
+        "public-notice" : "This posting serves to provide a public notice to employees of the mine, employees of the mining company(s), employees of independent contractors with any connection to the mine, persons with any connection to the mine, and any person with information regarding the cause or contributing factors of this accident. Please provide any information to: Matthew Stone, Lead Investigator:  Phone: 270-213-1720"
+    }
+}
