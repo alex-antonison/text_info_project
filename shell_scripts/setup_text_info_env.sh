@@ -14,3 +14,4 @@ pip install pandas
 pip install beautifulsoup4
 pip install scipy
 pip install numpy
+pip install selenium
