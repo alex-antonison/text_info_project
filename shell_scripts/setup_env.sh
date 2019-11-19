@@ -11,5 +11,5 @@ conda env create -f ../environment.yml
 ## downloads chrome driver
 mkdir ../chromedriver_76/
 cd ../chromedriver_76/
-wget https://chromedriver.storage.googleapis.com/index.html?path=76.0.3809.126/
+wget https://chromedriver.storage.googleapis.com/76.0.3809.126/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
