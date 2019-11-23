@@ -36,7 +36,13 @@ class Scraper(object):
 
         # check for chargeback
         self.chargeback_div = "views-field views-field-field-arep-fatal-cb-desc"
+
+        # fatality report items
+        self.fatality_report_item_class = "field field-name-field-arep-fatal-fatalgram-bp field-type-text-long field-label-above"
         
+        # final report items
+        self.final_report_class = "field field-name-body field-type-text-with-summary field-label-hidden"
+
         # initialize browser
         options = Options()
         options.headless = True
@@ -115,11 +121,61 @@ class Scraper(object):
         except:
             return None
 
-    def get_fatality_report(self, url):
-        pass
+    def get_fatality_alert(self, url):
+        fatality_alert_url = url + '/fatality-alert'
+        fatality_alert = {}
+        try:
+            # get paragraph text
+            soup = self.get_js_soup(fatality_alert_url)
+            p = soup.find_all('p')
+            fatality_alert.update({'summary': p[0].text})
+            fatality_alert.update({'additional_info': p[1].text})
+            # get best practice text
+            best_practice_list = soup.find('div', {'class' : self.fatality_report_item_class})
+            best_practice_list_text = [x.text for x in best_practice_list.find_all('li')]
+            best_practice_text = ''.join(best_practice_list_text)
+            fatality_alert.update({'best-practices': best_practice_text})
 
-    def get_final_report(self):
-        pass
+            return fatality_alert
+        except:
+            return None
+
+    def get_final_report(self, url):
+        final_report_url = url + '/final-report'
+        # some fatalities may not have a final report, if so, return None
+        
+        soup = self.get_js_soup(final_report_url)
+        soup = soup.find('div', {'class', self.final_report_class})
+        soup = soup.find('div', {'property': 'content:encoded'})
+        
+        if soup.text.find('Please check the URL for proper spelling and hyphenation') != -1:
+            return None
+
+        # setup for processing final report
+        final_report = {}
+        # the first content of the report
+        # will be header text
+        current_header = 'HEADER'
+        # initialize current section text
+        current_section_text = ''
+        # loop through each element to place appropriate
+        # content under each header
+        for item in soup.contents:
+            # some elements do not have text
+            # easier to just use a try catch
+            # to skip over the errored elements
+            try:
+                if str(item).find('h2') == -1:
+                    current_section_text = current_section_text + item.text
+                if str(item).find('h2') != -1:
+                    final_report.update({current_header: current_section_text})
+                    current_section_text = ''
+                    current_header = item.text
+            except:
+                continue
+        return final_report
+
+
 
     def get_public_notice(self, soup):
         public_class_soup = soup.find('section', {'class': self.public_content_class})
@@ -141,7 +197,9 @@ class Scraper(object):
                     'mined-mineral': self.get_section_div(soup, self.mined_mineral_div),
                     'incident-date': self.get_date(soup),
                     'public-notice': self.get_public_notice(soup),
-                    'preliminary-report': self.get_preliminary_report(url)
+                    'preliminary-report': self.get_preliminary_report(url),
+                    'fatality-alert': self.get_fatality_alert(url),
+                    'final-report': self.get_final_report(url)
                 }
             }
             self.report_info.update(report_info)
@@ -153,8 +211,8 @@ def main():
     scraper = Scraper("../chromedriver/chromedriver", get_all_flag = False)
     soup = scraper.get_js_soup("https://www.msha.gov/data-reports/fatality-reports/search")
     scraper.get_report_pages()
-    # scraper.get_report_info("/data-reports/fatality-reports/2014/fatality-27-june-14-2014")
-    print("Getting page content...")
+    # scraper.get_report_info("/data-reports/fatality-reports/2019/june-10-2019-fatality")
+    # print("Getting page content...")
     for item in scraper.report_key:
         scraper.get_report_info(item)
     
