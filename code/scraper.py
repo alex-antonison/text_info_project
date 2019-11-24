@@ -49,15 +49,22 @@ class Scraper(object):
         self.browser = webdriver.Chrome(self.driver_path, options=options)
         
     def get_js_soup(self, url):
+        """[summary]
+        This function uses the selenium browser to reach out to a web page
+        and bring back all of the html text in a soup object
+        Arguments:
+            url {string} --  The url of a website that you want the html returned
+        
+        Returns:
+            soup object -- A beautiful soup
+        """
         self.browser.get(url)
         res_html = self.browser.execute_script('return document.body.innerHTML')
         soup = BeautifulSoup(res_html,'html.parser')
         return soup
 
-    def get_report(self, soup):
-        return soup.find('ul', {'class': 'fatalities-list'}).find_all('a', href=True)
-
-    def get_report_keys(self, reports):
+    def get_report_keys(self, soup):
+        reports = soup.find('ul', {'class': 'fatalities-list'}).find_all('a', href=True)
         for item in reports:
             if str(item).count("/") == 5:
                 if str(item).count("class") == 0:
@@ -68,8 +75,7 @@ class Scraper(object):
         print("Getting report pages...")
         # Get reports for base url
         report_soup = self.get_js_soup(self.reports_url_base)
-        reports = self.get_report(report_soup)
-        self.get_report_keys(reports)
+        self.get_report_keys(report_soup)
 
         # Get the different pages 
         if self.get_all_flag == True:
@@ -79,12 +85,11 @@ class Scraper(object):
                 try:
                     report_url = self.reports_url_page.replace("{page_num}", str(page_number))
                     report_soup = self.get_js_soup(report_url)
-                    reports = self.get_report(report_soup)
-                    self.get_report_keys(reports)
+                    self.get_report_keys(report_soup)
                     
                 except:
                     break
-
+                print(report_url)
                 page_number += 1
     
     def get_section_div(self, soup, div_class):
@@ -95,22 +100,26 @@ class Scraper(object):
         div_soup = soup.find('div', {'class': self.incident_date_div})
         return soup.find('span', {'class': 'date-display-single'})['content']
 
-    def is_rescission(self, soup):
-        # If there is a rescission, do not want to include this report
-        recess_soup = soup.find('div', {'class': self.chargeback_div})
+    def is_invalid_report(self, soup):
+        # This class looks for invalid reports
+        # Assume report is valid unless it meets an invalid criteria
+        invalid_report_flag = False
         
-        if recess_soup != None:
-            text = recess_soup.find('span', {'class': 'field-content'}).text.find('Rescission')
-
+        # If there is a rescission, do not want to include this report
+        invalid_soup = soup.find('div', {'class': self.chargeback_div})      
+        if invalid_soup != None:
+            text = invalid_soup.find('span', {'class': 'field-content'}).text.find('Rescission')
             if text != -1:
-                # There is a rescission
-                return True
-            else:
-                # There is not a rescission
-                return False
-        else:
-            # There is not a rescission
-            return False
+                invalid_report_flag = True
+                print("Report was a rescission...")
+
+        # No location information provided since invalid report
+        if self.get_section_div(soup, self.location_div) == "No Information, No Information":
+            invalid_report_flag = True
+            print("No location information in report...")
+
+        return invalid_report_flag
+
     
     def get_preliminary_report(self, url):
         preliminary_report_url = url + '/preliminary-report'
@@ -183,9 +192,10 @@ class Scraper(object):
 
     def get_report_info(self, report):
         url = self.base_url + report
+        print(url)
         soup = self.get_js_soup(url)
         
-        if self.is_rescission(soup) == False:
+        if self.is_invalid_report(soup) == False:
             report_info = {
                 report:
                 {
@@ -203,26 +213,32 @@ class Scraper(object):
                 }
             }
             self.report_info.update(report_info)
-        else:
-            print("======> Rescission Report:", url)
+
+    def scrape_fatality_reports(self):
+        print("Scraping the reports...")
+        index = 0
+        for item in self.report_key:
+            self.get_report_info(item)
+            index += 1
+            if index%30 == 0:
+                print("Scraping report number:", str(index))
+
+    def save_reports(self, file_location):
+        print("Saving reports to ", file_location)
+        json = dumps(self.report_info)
+        f = open(file_location, "w")
+        f.write(json)
+        f.close()
 
 def main():
     print("Starting web scraping...")
-    scraper = Scraper("../chromedriver/chromedriver", get_all_flag = False)
-    soup = scraper.get_js_soup("https://www.msha.gov/data-reports/fatality-reports/search")
+    scraper = Scraper("chromedriver/chromedriver", get_all_flag = True)
+    # Get the different report page keys
     scraper.get_report_pages()
-    # scraper.get_report_info("/data-reports/fatality-reports/2019/june-10-2019-fatality")
-    # print("Getting page content...")
-    for item in scraper.report_key:
-        scraper.get_report_info(item)
-    
-    # Write reports to json file
-    print("Writing reports to json file...")
+    scraper.scrape_fatality_reports()
+    scraper.save_reports("data/report_info.json")
+    # scraper.get_report_info("/data-reports/fatality-reports/2018/fatality-8")
 
-    json = dumps(scraper.report_info)
-    f = open("../data/report_info.json","w")
-    f.write(json)
-    f.close()
 
 if __name__ == "__main__":
     main()
