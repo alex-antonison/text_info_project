@@ -31,7 +31,7 @@ class Scraper(object):
         # public context class
         self.public_content_class = "block block-views block-arep-fatal-block-4 block-views-arep-fatal-block-4 even"
 
-        # preliminary report class
+        # preliminary report
         self.preliminary_report_class = "field field-name-body field-type-text-with-summary field-label-above"
 
         # check for chargeback
@@ -42,7 +42,7 @@ class Scraper(object):
         
         # final report items
         self.final_report_class = "field field-name-body field-type-text-with-summary field-label-hidden"
-
+        
         # initialize browser
         options = Options()
         options.headless = True
@@ -121,9 +121,11 @@ class Scraper(object):
         return invalid_report_flag
 
     
-    def get_preliminary_report(self, url):
-        preliminary_report_url = url + '/preliminary-report'
+    def get_preliminary_report(self, soup):
         try:
+            # get url
+            preliminary_report_key = soup.find("a", href=re.compile("preliminary-report"))['href']
+            preliminary_report_url = self.base_url + preliminary_report_key
             soup = self.get_js_soup(preliminary_report_url)
             prelim_report_soup = soup.find('div', {'class': self.preliminary_report_class})
             return prelim_report_soup.find('div', {'class': 'field-item even'}).text
@@ -131,9 +133,13 @@ class Scraper(object):
             return None
 
     def get_fatality_alert(self, url):
-        fatality_alert_url = url + '/fatality-alert'
-        fatality_alert = {}
+        # Not all reports have a fatality alert
+        # if not, just return none
         try:
+            fatality_alert_key = soup.find("a", href=re.compile("fatality-alert"))['href']
+            fatality_alert_url = self.base_url + fatality_alert_key
+        
+            fatality_alert = {}
             # get paragraph text
             soup = self.get_js_soup(fatality_alert_url)
             p = soup.find_all('p')
@@ -150,45 +156,50 @@ class Scraper(object):
             return None
 
     def get_final_report(self, url):
-        final_report_url = url + '/final-report'
-        # some fatalities may not have a final report, if so, return None
-        
-        soup = self.get_js_soup(final_report_url)
-        soup = soup.find('div', {'class', self.final_report_class})
-        soup = soup.find('div', {'property': 'content:encoded'})
-        
-        if soup.text.find('Please check the URL for proper spelling and hyphenation') != -1:
+        try:
+            final_report_key = soup.find("a", href=re.compile("final-report"))['href']
+            final_report_url = self.base_url + final_report_soup.find('a')['href']
+
+            # some fatalities may not have a final report, if so, return None
+            soup = self.get_js_soup(final_report_url)
+            soup = soup.find('div', {'class', self.final_report_class})
+            soup = soup.find('div', {'property': 'content:encoded'})
+            
+            if soup.text.find('Please check the URL for proper spelling and hyphenation') != -1:
+                return None
+
+            # setup for processing final report
+            final_report = {}
+            # the first content of the report
+            # will be header text
+            current_header = 'HEADER'
+            # initialize current section text
+            current_section_text = ''
+            # loop through each element to place appropriate
+            # content under each header
+            for item in soup.contents:
+                # some elements do not have text
+                # easier to just use a try catch
+                # to skip over the errored elements
+                try:
+                    if str(item).find('h2') == -1:
+                        current_section_text = current_section_text + item.text
+                    if str(item).find('h2') != -1:
+                        final_report.update({current_header: current_section_text})
+                        current_section_text = ''
+                        current_header = item.text
+                except:
+                    continue
+            return final_report
+        except:
             return None
 
-        # setup for processing final report
-        final_report = {}
-        # the first content of the report
-        # will be header text
-        current_header = 'HEADER'
-        # initialize current section text
-        current_section_text = ''
-        # loop through each element to place appropriate
-        # content under each header
-        for item in soup.contents:
-            # some elements do not have text
-            # easier to just use a try catch
-            # to skip over the errored elements
-            try:
-                if str(item).find('h2') == -1:
-                    current_section_text = current_section_text + item.text
-                if str(item).find('h2') != -1:
-                    final_report.update({current_header: current_section_text})
-                    current_section_text = ''
-                    current_header = item.text
-            except:
-                continue
-        return final_report
-
-
-
     def get_public_notice(self, soup):
-        public_class_soup = soup.find('section', {'class': self.public_content_class})
-        return public_class_soup.find('div', {'class': 'field-content'}).text
+        try:
+            public_class_soup = soup.find('section', {'class': self.public_content_class})
+            return public_class_soup.find('div', {'class': 'field-content'}).text
+        except:
+            print("No public notice...")
 
     def get_report_info(self, report):
         url = self.base_url + report
@@ -207,9 +218,9 @@ class Scraper(object):
                     'mined-mineral': self.get_section_div(soup, self.mined_mineral_div),
                     'incident-date': self.get_date(soup),
                     'public-notice': self.get_public_notice(soup),
-                    'preliminary-report': self.get_preliminary_report(url),
-                    'fatality-alert': self.get_fatality_alert(url),
-                    'final-report': self.get_final_report(url)
+                    'preliminary-report': self.get_preliminary_report(soup),
+                    'fatality-alert': self.get_fatality_alert(soup),
+                    'final-report': self.get_final_report(soup)
                 }
             }
             self.report_info.update(report_info)
@@ -232,7 +243,7 @@ class Scraper(object):
 
 def main():
     print("Starting web scraping...")
-    scraper = Scraper("chromedriver/chromedriver", get_all_flag = True)
+    scraper = Scraper("chromedriver/chromedriver", get_all_flag = False)
     # Get the different report page keys
     scraper.get_report_pages()
     scraper.scrape_fatality_reports()
