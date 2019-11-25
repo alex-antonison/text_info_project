@@ -124,20 +124,26 @@ class Scraper(object):
     def get_preliminary_report(self, soup):
         try:
             # get url
-            preliminary_report_key = soup.find("a", href=re.compile("preliminary-report"))['href']
+            preliminary_report_key = soup.select_one("a[href*=preliminary-report]")['href']
             preliminary_report_url = self.base_url + preliminary_report_key
             soup = self.get_js_soup(preliminary_report_url)
             prelim_report_soup = soup.find('div', {'class': self.preliminary_report_class})
             return prelim_report_soup.find('div', {'class': 'field-item even'}).text
         except:
+            print("No preliminary report...")
             return None
 
-    def get_fatality_alert(self, url):
+    def get_fatality_alert(self, soup):
         # Not all reports have a fatality alert
         # if not, just return none
         try:
-            fatality_alert_key = soup.find("a", href=re.compile("fatality-alert"))['href']
-            fatality_alert_url = self.base_url + fatality_alert_key
+            fatality_alert_key = soup.select_one("a[href*=fatality-alert]")
+
+            if fatality_alert_key == None:
+                # sometimes the URL is slightly different
+                fatality_alert_key = soup.select_one("a[href*=fatality\%20alert]")
+
+            fatality_alert_url = self.base_url + fatality_alert_key['href']
         
             fatality_alert = {}
             # get paragraph text
@@ -153,12 +159,13 @@ class Scraper(object):
 
             return fatality_alert
         except:
+            print("No fatality alert...")
             return None
 
-    def get_final_report(self, url):
+    def get_final_report(self, soup):
         try:
-            final_report_key = soup.find("a", href=re.compile("final-report"))['href']
-            final_report_url = self.base_url + final_report_soup.find('a')['href']
+            final_report_key = soup.select_one("a[href*=final-report]")['href']
+            final_report_url = self.base_url + final_report_key
 
             # some fatalities may not have a final report, if so, return None
             soup = self.get_js_soup(final_report_url)
@@ -166,6 +173,7 @@ class Scraper(object):
             soup = soup.find('div', {'property': 'content:encoded'})
             
             if soup.text.find('Please check the URL for proper spelling and hyphenation') != -1:
+                print("No final report...")
                 return None
 
             # setup for processing final report
@@ -192,6 +200,7 @@ class Scraper(object):
                     continue
             return final_report
         except:
+            print("No final report...")
             return None
 
     def get_public_notice(self, soup):
@@ -243,12 +252,12 @@ class Scraper(object):
 
 def main():
     print("Starting web scraping...")
-    scraper = Scraper("chromedriver/chromedriver", get_all_flag = False)
+    scraper = Scraper("chromedriver/chromedriver", get_all_flag = True)
     # Get the different report page keys
     scraper.get_report_pages()
     scraper.scrape_fatality_reports()
+    # scraper.get_report_info("/data-reports/fatality-reports/2017/fatality-14-october-23-2017")
     scraper.save_reports("data/report_info.json")
-    # scraper.get_report_info("/data-reports/fatality-reports/2018/fatality-8")
 
 
 if __name__ == "__main__":
