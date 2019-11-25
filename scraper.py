@@ -2,6 +2,13 @@ from bs4 import BeautifulSoup
 from selenium import webdriver 
 from selenium.webdriver.chrome.options import Options
 from json import dumps
+import logging 
+
+logging.basicConfig(filename="output.log", 
+                        format='%(asctime)s %(message)s', 
+                        filemode='w') 
+logger=logging.getLogger() 
+logger.setLevel(logging.INFO) 
 
 class Scraper(object):
     
@@ -72,7 +79,7 @@ class Scraper(object):
                     self.report_key.append(item['href'])
 
     def get_report_pages(self):
-        print("Getting report pages...")
+        logger.info("Getting report pages...")
         # Get reports for base url
         report_soup = self.get_js_soup(self.reports_url_base)
         self.get_report_keys(report_soup)
@@ -89,7 +96,7 @@ class Scraper(object):
                     
                 except:
                     break
-                print(report_url)
+                logger.info(report_url)
                 page_number += 1
     
     def get_section_div(self, soup, div_class):
@@ -111,12 +118,12 @@ class Scraper(object):
             text = invalid_soup.find('span', {'class': 'field-content'}).text.find('Rescission')
             if text != -1:
                 invalid_report_flag = True
-                print("Report was a rescission...")
+                logger.info("Report was a rescission...")
 
         # No location information provided since invalid report
         if self.get_section_div(soup, self.location_div) == "No Information, No Information":
             invalid_report_flag = True
-            print("No location information in report...")
+            logger.info("No location information in report...")
 
         return invalid_report_flag
 
@@ -130,7 +137,7 @@ class Scraper(object):
             prelim_report_soup = soup.find('div', {'class': self.preliminary_report_class})
             return prelim_report_soup.find('div', {'class': 'field-item even'}).text
         except:
-            print("No preliminary report...")
+            logger.info("No preliminary report...")
             return None
 
     def get_fatality_alert(self, soup):
@@ -159,7 +166,7 @@ class Scraper(object):
 
             return fatality_alert
         except:
-            print("No fatality alert...")
+            logger.info("No fatality alert...")
             return None
 
     def get_final_report(self, soup):
@@ -173,7 +180,7 @@ class Scraper(object):
             soup = soup.find('div', {'property': 'content:encoded'})
             
             if soup.text.find('Please check the URL for proper spelling and hyphenation') != -1:
-                print("No final report...")
+                logger.info("No final report...")
                 return None
 
             # setup for processing final report
@@ -200,7 +207,7 @@ class Scraper(object):
                     continue
             return final_report
         except:
-            print("No final report...")
+            logger.info("No final report...")
             return None
 
     def get_public_notice(self, soup):
@@ -208,11 +215,11 @@ class Scraper(object):
             public_class_soup = soup.find('section', {'class': self.public_content_class})
             return public_class_soup.find('div', {'class': 'field-content'}).text
         except:
-            print("No public notice...")
+            logger.info("No public notice...")
 
     def get_report_info(self, report):
         url = self.base_url + report
-        print(url)
+        logger.info(url)
         soup = self.get_js_soup(url)
         
         if self.is_invalid_report(soup) == False:
@@ -235,23 +242,24 @@ class Scraper(object):
             self.report_info.update(report_info)
 
     def scrape_fatality_reports(self):
-        print("Scraping the reports...")
+        logger.info("Scraping the reports...")
         index = 0
         for item in self.report_key:
             self.get_report_info(item)
             index += 1
             if index%30 == 0:
-                print("Scraping report number:", str(index))
+                logger.info("Scraping report number: " + str(index))
 
     def save_reports(self, file_location):
-        print("Saving reports to ", file_location)
+        logger.info("Saving reports to " + file_location)
         json = dumps(self.report_info)
         f = open(file_location, "w")
         f.write(json)
         f.close()
 
 def main():
-    print("Starting web scraping...")
+    
+    logger.info("Starting web scraping...")
     scraper = Scraper("chromedriver/chromedriver", get_all_flag = True)
     # Get the different report page keys
     scraper.get_report_pages()
