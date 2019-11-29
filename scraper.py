@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from json import dumps
 import logging 
+import sys
 
 logging.basicConfig(filename="output.log", 
                         format='%(asctime)s %(message)s', 
@@ -259,12 +260,18 @@ class Scraper(object):
 
 def main():
     
+    ## Command line arguments
+    chrome_driver_path_arg = sys.argv[1]
+    get_all_flag_arg = bool(sys.argv[2])
+
     logger.info("Starting web scraping...")
-    scraper = Scraper("chromedriver/chromedriver", get_all_flag = True)
-    # Get the different report page keys
+    scraper = Scraper(driver_path = chrome_driver_path_arg, get_all_flag = get_all_flag_arg)
+    ## Get the different report page keys
     scraper.get_report_pages()
+    ## Scrape the fatality reports
     scraper.scrape_fatality_reports()
-    # scraper.get_report_info("/data-reports/fatality-reports/2017/fatality-14-october-23-2017")
+    ## Once done, save to the data/ folder
+    ## This will overwrite an existing report_info.json file
     scraper.save_reports("data/report_info.json")
 
 
