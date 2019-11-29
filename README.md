@@ -2,9 +2,9 @@
 
 ## Team Members
 
-Alexander Antonison (ada4) - Team Lead
-Sai Rao (sairao2)
-Amartya Roy Chowdhury (amartya4)
+- Alexander Antonison (ada4) - Team Lead
+- Sai Rao (sairao2)
+- Amartya Roy Chowdhury (amartya4)
 
 ## Purpose
 
