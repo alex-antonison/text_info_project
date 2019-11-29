@@ -57,9 +57,10 @@ class Scraper(object):
         self.browser = webdriver.Chrome(self.driver_path, options=options)
         
     def get_js_soup(self, url):
-        """[summary]
+        """
         This function uses the selenium browser to reach out to a web page
-        and bring back all of the html text in a soup object
+        and bring back all of the html text in a soup object.
+        (Source) This function was taken from the MP2 part1 scraper assignment
         Arguments:
             url {string} --  The url of a website that you want the html returned
         
@@ -72,6 +73,13 @@ class Scraper(object):
         return soup
 
     def get_report_keys(self, soup):
+        """
+        This method takes in the soup from a report page and iterates through
+        to pull all of the report keys out of a given page.
+        
+        Arguments:
+            soup {bs4.object} -- The returned soup for a given report page
+        """
         reports = soup.find('ul', {'class': 'fatalities-list'}).find_all('a', href=True)
         for item in reports:
             if str(item).count("/") == 5:
@@ -80,6 +88,13 @@ class Scraper(object):
                     self.report_key.append(item['href'])
 
     def get_report_pages(self):
+        """
+        This method is used to iterate through all of the report
+        pages from the fatalities website and gather all of the report keys.
+        If the `get_all_flag` is set to false, only the first page of reports
+        will be pulled and then scraped.  This is suggested for demonstration and development
+        purposes.
+        """
         logger.info("Getting report pages...")
         # Get reports for base url
         report_soup = self.get_js_soup(self.reports_url_base)
@@ -101,14 +116,48 @@ class Scraper(object):
                 page_number += 1
     
     def get_section_div(self, soup, div_class):
+        """
+        This is a general method that when provided a class within a div,
+        it will return the text contents.
+        
+        Arguments:
+            soup {bs4.object} -- The soup for a given fatality report
+            div_class {string} -- The desired html element to have its text returned
+        
+        Returns:
+            [string] -- The desired text for a given div + class combination
+        """
         div_soup = soup.find('div', {'class': div_class})
         return div_soup.find('span', {'class': 'field-content'}).text
 
     def get_date(self, soup):
+        """
+        This gets the date for a given fatality.  This varies slightly from
+        the other information being pulled as we wanted the content since the date
+        was formatted in a way that lends itself better for processing.
+        
+        Arguments:
+            soup {bs4.object} -- The soup for a given fatality report
+        
+        Returns:
+            string -- A date of the fatality report
+        """
         div_soup = soup.find('div', {'class': self.incident_date_div})
         return soup.find('span', {'class': 'date-display-single'})['content']
 
     def is_invalid_report(self, soup):
+        """
+        There are some reports that are not valid reports that should be
+        ignored.  This method starts with setting that flag to false
+        and then performs necessary checks and if any of the checks
+        succeed, set the flag to True.
+        
+        Arguments:
+            soup {bs4.object} -- The soup for a given fatality report
+        
+        Returns:
+            bool -- True/False depending on if the report is valid or not
+        """
         # This class looks for invalid reports
         # Assume report is valid unless it meets an invalid criteria
         invalid_report_flag = False
@@ -130,8 +179,22 @@ class Scraper(object):
 
     
     def get_preliminary_report(self, soup):
+        """
+        This method gets the preliminary report by processing the fatality report
+        page to find the url embedded within it.  Since there is sometimes an inconsistent
+        method in how the url is named, it could not be progamatically determined.
+        Since not all fatality reports have a preliminary report, a try-catch
+        is used to attempt to get it and in the event of a failure, it is assumed
+        there is not a preliminary report.
+        
+        Arguments:
+            soup {bs4.object} -- The soup for a given fatality report
+        
+        Returns:
+            string -- The text for the preliminary report
+        """
         try:
-            # get url
+            # get url for preliminary report
             preliminary_report_key = soup.select_one("a[href*=preliminary-report]")['href']
             preliminary_report_url = self.base_url + preliminary_report_key
             soup = self.get_js_soup(preliminary_report_url)
@@ -142,6 +205,20 @@ class Scraper(object):
             return None
 
     def get_fatality_alert(self, soup):
+        """
+        This method first finds the fatality alert URL within the fatality report page and then
+        pulls the text.  Since this includes a summary, additional_inof, and best practices section,
+        each is returned as a dictionary to allow for individual parsing.
+        Since not all fatality reports have a fatality alert, a try-catch
+        is used to attempt to get it and in the event of a failure, it is assumed
+        there is not a fatality alert.
+        
+        Arguments:
+            soup {bs4.object} -- The soup for a given fatality report
+        
+        Returns:
+            dictionary -- The three sections of fatality alert
+        """
         # Not all reports have a fatality alert
         # if not, just return none
         try:
@@ -171,6 +248,22 @@ class Scraper(object):
             return None
 
     def get_final_report(self, soup):
+        """
+        This method first finds the url for the final report and then pulls
+        all of the text for each section and stores it into the appropriate portion
+        of the dictionary.  In order to make this flexible, a loop was created that
+        simply went through each element in the html and when it encountered
+        a header, would change the section that the text was being nested under.
+        Since not all fatality reports have a final report, a try-catch
+        is used to attempt to get it and in the event of a failure, it is assumed
+        there is not a final report.
+        
+        Arguments:
+            soup {bs4.object} -- The soup for a given fatality report
+        
+        Returns:
+            dictionary -- A dictionary with all of the sections of a final report
+        """
         try:
             final_report_key = soup.select_one("a[href*=final-report]")['href']
             final_report_url = self.base_url + final_report_key
@@ -212,14 +305,34 @@ class Scraper(object):
             return None
 
     def get_public_notice(self, soup):
+        """
+        This method pulls the public notice information from the fatality report page.
+        A try-catch is used since some fatality reports do not have a public notice.
+        
+        Arguments:
+            soup {bs4.object} -- The soup for a given fatality report
+        
+        Returns:
+            string -- The text for a public notice of a fatality report
+        """
         try:
             public_class_soup = soup.find('section', {'class': self.public_content_class})
             return public_class_soup.find('div', {'class': 'field-content'}).text
         except:
             logger.info("No public notice...")
 
-    def get_report_info(self, report):
-        url = self.base_url + report
+    def get_report_info(self, report_key):
+        """
+        This method takes in a report_key and then constructs the report dictionary
+        that will later be stored in the json output file.
+        It first gets the soup from the report page and then passes that soup
+        into all of the other helper methods to construct the dictionary.  Once constructed
+        the report info will be appended to the `report_info` dictionary.
+        
+        Arguments:
+            report_key {string} -- The given report_key for a fatality report
+        """
+        url = self.base_url + report_key
         logger.info(url)
         soup = self.get_js_soup(url)
         
@@ -243,6 +356,11 @@ class Scraper(object):
             self.report_info.update(report_info)
 
     def scrape_fatality_reports(self):
+        """
+        This method loops through all of the report keys to pass into the
+        `get_report_info` method that will scrape the fatality reports
+        and then add it to the `report_info` dictionary.
+        """
         logger.info("Scraping the reports...")
         index = 0
         for item in self.report_key:
@@ -252,6 +370,12 @@ class Scraper(object):
                 logger.info("Scraping report number: " + str(index))
 
     def save_reports(self, file_location):
+        """
+        This method takes care of storing the scraped web pages in a json file
+        
+        Arguments:
+            file_location {string} -- where the scraped web pages are stored in json format
+        """
         logger.info("Saving reports to " + file_location)
         json = dumps(self.report_info)
         f = open(file_location, "w")
@@ -265,11 +389,16 @@ def main():
     get_all_flag_arg = bool(sys.argv[2])
 
     logger.info("Starting web scraping...")
+
+    ## Initialize the scraper object
     scraper = Scraper(driver_path = chrome_driver_path_arg, get_all_flag = get_all_flag_arg)
+
     ## Get the different report page keys
     scraper.get_report_pages()
+
     ## Scrape the fatality reports
     scraper.scrape_fatality_reports()
+    
     ## Once done, save to the data/ folder
     ## This will overwrite an existing report_info.json file
     scraper.save_reports("data/report_info.json")
