@@ -338,7 +338,7 @@ class Scraper(object):
         
         if self.is_invalid_report(soup) == False:
             report_info = {
-                report:
+                report_key:
                 {
                     'report-url': url,
                     'accidnet-classification': self.get_section_div(soup, self.accident_div),
@@ -386,12 +386,17 @@ def main():
     
     ## Command line arguments
     chrome_driver_path_arg = sys.argv[1]
-    get_all_flag_arg = bool(sys.argv[2])
+    get_all_flag_arg = sys.argv[2]
+
+    if get_all_flag_arg == "True":
+        get_all_flag_input = True
+    if get_all_flag_arg == "False":
+        get_all_flag_input = False
 
     logger.info("Starting web scraping...")
 
     ## Initialize the scraper object
-    scraper = Scraper(driver_path = chrome_driver_path_arg, get_all_flag = get_all_flag_arg)
+    scraper = Scraper(driver_path = chrome_driver_path_arg, get_all_flag = get_all_flag_input)
 
     ## Get the different report page keys
     scraper.get_report_pages()
