@@ -1,4 +1,6 @@
 #!/bin/bash
+
+## Activating the virtualenv text_info
 source ~/.virtualenvs/text_info/bin/activate
 
 ## First argument should point to the desired
