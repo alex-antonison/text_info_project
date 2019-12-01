@@ -63,7 +63,7 @@ Stuff here about data visualization
 - Sai helped write the project proposal by writing the function of the tool, who will benefit from the tool, and how we will demonstrate the usefulness of the tool.
 - Sai came up with the overall project idea and acted as a subject matter expert as he works in the mining industry.
 - Sai developed and implemented the data visualizations to provide meaningful insights into mining fatalities.
-- Alex helped write the documentation around the code submission with an emphasis on the web scraping section.
+- Sai helped write the documentation around the code submission with an emphasis on the data visualization section.
 
 ### Amartya Roy Chowdhury (amartya4)
 
