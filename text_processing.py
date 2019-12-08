@@ -35,12 +35,21 @@ class TextProcess(object):
               
         return df
 
+    def extract_final_report_description(self, json_df, base_df):
+
+        ## Get rid of the other columns
+        reports_df = json_df.loc[:,('report-key', 'final-report')]
+
+        ## Get rid of fatality reports without a final report
+        reports_df = reports_df[~reports_df['final-report'].isnull()]
+
+
 
     def process_text(self):
         df = self.process_initial_json()
-        df = self.create_base_report(df)
+        final_df = self.create_base_report(df)
 
-        df.to_csv(self.output_file, index=False)
+        final_df.to_csv(self.output_file, index=False)
 
 
 def main():
