@@ -14,7 +14,7 @@ class TextProcess(object):
 
         df = pd.DataFrame.from_dict(data, orient='index').reset_index()
 
-        df.rename(columns={'index':'report_key'}, inplace=True)
+        df.rename(columns={'index':'report-key'}, inplace=True)
 
         return df 
         
@@ -28,7 +28,12 @@ class TextProcess(object):
         df = df.merge(self.state_map, on='location-processed', how='left')
 
         df['state'] = df['state'].combine_first(df['location-processed'])
-        
+
+        ## There is a special case for report-key /data-reports/fatality-reports/2009/fatality-13-july-2-2009'
+        ## where we need to hard code in the state since it was not properly put into the webpage
+        ## you can see this here https://www.msha.gov/data-reports/fatality-reports/2009/fatality-13-july-2-2009
+        df.loc[df['report-key'] == '/data-reports/fatality-reports/2009/fatality-13-july-2-2009', ('state')] = 'Pennsylvania'
+              
         return df
 
 
