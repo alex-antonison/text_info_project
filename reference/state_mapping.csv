@@ -1,5 +1,64 @@
-state,state_mapping
+location-processed,state
+ConsolPennsylvannia,Pennsylvania
+NorthDakota,North Dakota
+NewMexico,New Mexico
+NorthCarolina,North Carolina
+NewHampshire,New Hampshire
+NewYork,New York
+SouthCarolina,South Carolina
+FiveMilePrepPlant&RefuseImpoundment/WestVirginia,West Virginia
+PuertoRico,Puerto Rico
+KY41659,Kentucky
+IN47802,Indiana
+UT84057,Utah
+AL,Alabama
+AK,Alaska
+AZ,Arizona
+AR,Arkansas
+CA,California
+CO,Colorado
+CT,Connecticut
+DE,Delaware
+DC,District of Columbia
+FL,Florida
+GA,Georgia
+HI,Hawaii
+ID,Idaho
+IL,Illinois
+IN,Indiana
+IA,Iowa
+KS,Kansas
 KY,Kentucky
-WV,West Virginia
-TN,Tennessee
+LA,Louisiana
+ME,Maine
+MT,Montana
+NE,Nebraska
+NV,Nevada
+NH,New Hampshire
+NJ,New Jersey
+NM,New Mexico
+NY,New York
+NC,North Carolina
+ND,North Dakota
+OH,Ohio
+OK,Oklahoma
+OR,Oregon
+MD,Maryland
+MA,Massachusetts
+MI,Michigan
+MN,Minnesota
 MS,Mississippi
+MO,Missouri
+PA,Pennsylvania
+RI,Rhode Island
+SC,South Carolina
+SD,South Dakota
+TN,Tennessee
+TX,Texas
+UT,Utah
+VT,Vermont
+VA,Virginia
+WA,Washington
+WV,West Virginia
+WI,Wisconsin
+WY,Wyoming
