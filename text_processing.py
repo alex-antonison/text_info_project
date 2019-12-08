@@ -16,10 +16,9 @@ class TextProcess(object):
 
         df.rename(columns={'index':'report-key'}, inplace=True)
 
-        return df 
-        
+        return df
 
-    def create_base_repot(self, df):
+    def create_base_report(self, df):
         df.drop(columns=['public-notice', 'preliminary-report', 'fatality-alert', 'final-report'], inplace=True)
 
         for i in range(df.shape[0]):
@@ -39,7 +38,7 @@ class TextProcess(object):
 
     def process_text(self):
         df = self.process_initial_json()
-        df = self.create_base_repot(df)
+        df = self.create_base_report(df)
 
         df.to_csv(self.output_file, index=False)
 
