@@ -35,19 +35,45 @@ class TextProcess(object):
               
         return df
 
-    def extract_final_report_description(self, json_df, base_df):
+    def extract_final_report_description(self, df):
 
         ## Get rid of the other columns
-        reports_df = json_df.loc[:,('report-key', 'final-report')]
+        df = df[~df['final-report'].isnull()]
 
-        ## Get rid of fatality reports without a final report
-        reports_df = reports_df[~reports_df['final-report'].isnull()]
+        df = df[df['final-report'] != {}].loc[:,('report-key', 'final-report')].reset_index(drop=True)
+
+        df['f-p-desc-of-accident'] = ''
+
+        for item in range(df.shape[0]-1):
+            keys = [x.lower() for x in df.loc[item, 'final-report'].keys()]
+            
+            if 'DESCRIPTION OF ACCIDENT'.lower() in keys:
+                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['DESCRIPTION OF ACCIDENT'].lower()
+            elif 'DESCRIPTION OF THE ACCIDENT'.lower() in keys:
+                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['DESCRIPTION OF THE ACCIDENT'].lower()
+            else:
+                print(str(item) + " Does not have Description of Accident")
+
+        return df
+
+        ## TODO: Remove \xa0
+
+        ## TODO: Remove punctuation
 
 
 
     def process_text(self):
-        df = self.process_initial_json()
-        final_df = self.create_base_report(df)
+        json_df = self.process_initial_json()
+
+        report_df = self.extract_final_report_description(json_df)
+
+        base_df = self.create_base_report(json_df)
+
+        final_df = base_df.merge(report_df, on='report-key', how='left')
+
+        print(report_df.head())
+
+        print(final_df.head())
 
         final_df.to_csv(self.output_file, index=False)
 

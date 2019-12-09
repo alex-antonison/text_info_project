@@ -264,6 +264,13 @@ class Scraper(object):
         Returns:
             dictionary -- A dictionary with all of the sections of a final report
         """
+        section_of_interest = ['OVERVIEW', 'GENERAL INFORMATION', 'DESCRIPTION OF ACCIDENT',
+                               'DESCRIPTION OF THE ACCIDENT', 'INVESTIGATION OF THE ACCIDENT', 
+                               'INVESTIGATION OF ACCIDENT', 'DISCUSSION', 
+                               'TRAINING AND EXPERIENCE', 'ROOT CAUSE ANALYSIS', 
+                               'CONCLUSION', 'ENFORCEMENT ACTIONS']
+        section_of_interest = [x.lower() for x in section_of_interest]
+
         try:
             final_report_key = soup.select_one("a[href*=final-report]")['href']
             final_report_url = self.base_url + final_report_key
@@ -281,24 +288,27 @@ class Scraper(object):
             final_report = {}
             # the first content of the report
             # will be header text
-            current_header = 'HEADER'
+            current_header = 'header'
             # initialize current section text
             current_section_text = ''
             # loop through each element to place appropriate
             # content under each header
-            for item in soup.contents:
+            for item in soup.find_all(['p','h2','div']):
                 # some elements do not have text
                 # easier to just use a try catch
                 # to skip over the errored elements
                 try:
-                    if str(item).find('h2') == -1:
-                        current_section_text = current_section_text + item.text
-                    if str(item).find('h2') != -1:
+                    # this is for non-header text
+                    if item.text.lower() not in section_of_interest:
+                        current_section_text = current_section_text + item.text.lower()
+                    # this is to capture headers
+                    if item.text.lower() in section_of_interest:
                         final_report.update({current_header: current_section_text})
                         current_section_text = ''
-                        current_header = item.text
+                        current_header = item.text.lower()
                 except:
                     continue
+            logger.info("Final report key count: %s", len(final_report.keys()))
             return final_report
         except:
             logger.info("No final report...")

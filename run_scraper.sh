@@ -10,4 +10,4 @@ source ~/.virtualenvs/text_info/bin/activate
 ## of the 430+ reports.  For demonstration purposes you can see 
 ## around the first 30 pages scraped.
 
-python scraper.py chromedriver/chromedriver False
+python scraper.py chromedriver/chromedriver True
