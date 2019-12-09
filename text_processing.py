@@ -37,6 +37,8 @@ class TextProcess(object):
 
     def extract_final_report_description(self, df):
 
+        print("Extracting data")
+
         ## Get rid of the other columns
         df = df[~df['final-report'].isnull()]
 
@@ -45,14 +47,17 @@ class TextProcess(object):
         df['f-p-desc-of-accident'] = ''
 
         for item in range(df.shape[0]-1):
-            keys = [x.lower() for x in df.loc[item, 'final-report'].keys()]
-            
-            if 'DESCRIPTION OF ACCIDENT'.lower() in keys:
-                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['DESCRIPTION OF ACCIDENT'].lower()
-            elif 'DESCRIPTION OF THE ACCIDENT'.lower() in keys:
-                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['DESCRIPTION OF THE ACCIDENT'].lower()
+
+            keys = df.loc[item, 'final-report'].keys()
+
+            if 'description of accident' in keys:
+                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['description of accident']
+            elif 'description of the accident' in keys:
+                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['description of the accident']
             else:
                 print(str(item) + " Does not have Description of Accident")
+
+        df = df.loc[:,('report-key', 'f-p-desc-of-accident')]
 
         return df
 
@@ -75,7 +80,7 @@ class TextProcess(object):
 
         print(final_df.head())
 
-        final_df.to_csv(self.output_file, index=False)
+        final_df.to_csv(self.output_file, index=False, sep="|")
 
 
 def main():
