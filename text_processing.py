@@ -71,10 +71,13 @@ class TextProcess(object):
 
         df['f-p-desc-of-accident'] = df.apply(lambda x : self.keep_only_letters(x['f-p-desc-of-accident_pre']), axis = 1)
 
+        ## To analyze output, saving this to csv to 
+        ## do a comparison of what it looked like before
+        ## and after cleanup
         df = df.loc[:,('report-key', 'f-p-desc-of-accident_pre', 'f-p-desc-of-accident')]
-
         df.to_csv("data/final_report_pre_and_post_processing.csv", sep="|", index=False)
 
+        ## For final output, only want to include the actual column
         df = df.loc[:,('report-key', 'f-p-desc-of-accident')]
 
         return df
