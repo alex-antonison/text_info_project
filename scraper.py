@@ -6,8 +6,8 @@ import logging
 import sys
 
 logging.basicConfig(filename="output.log", 
-                        format='%(asctime)s %(message)s', 
-                        filemode='w') 
+                    format='%(asctime)s %(message)s', 
+                    filemode='w') 
 logger=logging.getLogger() 
 logger.setLevel(logging.INFO) 
 

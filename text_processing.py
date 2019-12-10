@@ -1,6 +1,5 @@
 import pandas as pd
 import json
-import re
 
 
 class TextProcess(object):
@@ -36,9 +35,19 @@ class TextProcess(object):
               
         return df
 
-    def keep_only_letters(self, x):
+    def keep_only_letters(self, row_string):
+        '''
+        This method removes everything except spaces and letters to help
+        facilitate performing topic analysis.
+
+        Arguments:
+            row_string {string} -- The pandas column we are wanting to strip
+
+        Returns:
+            string -- a cleaned up string 
+        '''
         whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-        return ''.join(filter(whitelist.__contains__, x))
+        return ''.join(filter(whitelist.__contains__, row_string))
 
     def extract_final_report_description(self, df):
 
@@ -51,7 +60,7 @@ class TextProcess(object):
 
         df['f-p-desc-of-accident_pre'] = ''
 
-        for item in range(df.shape[0]-1):
+        for item in range(len(df)):
 
             keys = df.loc[item, 'final-report'].keys()
 
@@ -59,12 +68,10 @@ class TextProcess(object):
                 df.loc[item,'f-p-desc-of-accident_pre'] = df.loc[item,'final-report']['description of accident']
             elif 'description of the accident' in keys:
                 df.loc[item,'f-p-desc-of-accident_pre'] = df.loc[item,'final-report']['description of the accident']
-            else:
-                print(str(item) + " Does not have Description of Accident")
 
         df = df.loc[:,('report-key', 'f-p-desc-of-accident_pre')]
 
-        df['f-p-desc-of-accident'] = df.apply(lambda row : self.keep_only_letters(row['f-p-desc-of-accident_pre']), axis = 1)
+        df['f-p-desc-of-accident'] = df.apply(lambda x : self.keep_only_letters(x['f-p-desc-of-accident_pre']), axis = 1)
 
         return df
 
@@ -77,10 +84,6 @@ class TextProcess(object):
         base_df = self.create_base_report(json_df)
 
         final_df = base_df.merge(report_df, on='report-key', how='left')
-
-        print(report_df.head())
-
-        print(final_df.head())
 
         final_df.to_csv(self.output_file, index=False, sep="|")
 
