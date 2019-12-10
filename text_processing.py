@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import re
 
 
 class TextProcess(object):
@@ -35,6 +36,10 @@ class TextProcess(object):
               
         return df
 
+    def keep_only_letters(self, x):
+        whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        return ''.join(filter(whitelist.__contains__, x))
+
     def extract_final_report_description(self, df):
 
         print("Extracting data")
@@ -44,27 +49,24 @@ class TextProcess(object):
 
         df = df[df['final-report'] != {}].loc[:,('report-key', 'final-report')].reset_index(drop=True)
 
-        df['f-p-desc-of-accident'] = ''
+        df['f-p-desc-of-accident_pre'] = ''
 
         for item in range(df.shape[0]-1):
 
             keys = df.loc[item, 'final-report'].keys()
 
             if 'description of accident' in keys:
-                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['description of accident']
+                df.loc[item,'f-p-desc-of-accident_pre'] = df.loc[item,'final-report']['description of accident']
             elif 'description of the accident' in keys:
-                df.loc[item,'f-p-desc-of-accident'] = df.loc[item,'final-report']['description of the accident']
+                df.loc[item,'f-p-desc-of-accident_pre'] = df.loc[item,'final-report']['description of the accident']
             else:
                 print(str(item) + " Does not have Description of Accident")
 
-        df = df.loc[:,('report-key', 'f-p-desc-of-accident')]
+        df = df.loc[:,('report-key', 'f-p-desc-of-accident_pre')]
+
+        df['f-p-desc-of-accident'] = df.apply(lambda row : self.keep_only_letters(row['f-p-desc-of-accident_pre']), axis = 1)
 
         return df
-
-        ## TODO: Remove \xa0
-
-        ## TODO: Remove punctuation
-
 
 
     def process_text(self):
