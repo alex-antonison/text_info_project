@@ -1,6 +1,4 @@
 import pandas as pd
-import json
-
 
 class TextProcess(object):
     def __init__(self, input_file, output_file):
@@ -9,12 +7,10 @@ class TextProcess(object):
         self.state_map = pd.read_csv("reference/state_mapping.csv")
 
     def process_initial_json(self):
-        with open(self.input_file) as json_file:
-            data = json.load(json_file)
-
-        df = pd.DataFrame.from_dict(data, orient='index').reset_index()
-
-        df.rename(columns={'index':'report-key'}, inplace=True)
+        df = (pd.read_json(self.input_file)
+                .transpose()
+                .reset_index()
+                .rename(columns={"index":"report-key"}))
 
         return df
 
