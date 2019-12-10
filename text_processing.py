@@ -69,9 +69,11 @@ class TextProcess(object):
             elif 'description of the accident' in keys:
                 df.loc[item,'f-p-desc-of-accident_pre'] = df.loc[item,'final-report']['description of the accident']
 
-        df = df.loc[:,('report-key', 'f-p-desc-of-accident_pre')]
-
         df['f-p-desc-of-accident'] = df.apply(lambda x : self.keep_only_letters(x['f-p-desc-of-accident_pre']), axis = 1)
+
+        df.to_csv("data/final_report_pre_and_post_processing.csv", sep="|", index=False)
+
+        df = df.loc[:,('report-key', 'f-p-desc-of-accident')]
 
         return df
 
