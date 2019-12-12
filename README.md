@@ -46,16 +46,16 @@ The three main methods are the `get_report_pages`, `scrape_fatality_reports`, an
 
 In this script, using pandas, I read in the `data/report_info.json` file and have two main methods.  The first method, `create_base_report()` pulls out the following text columns:
 
-- report-key: This is a unique key to identify each report.
-- report-url: The url to the fatality report.
-- accident-classification: The classification of the accident
-- location: The unprocessed location text.
-- mine-type: The type of mine.
-- mine-controller: The controller over the mine.
-- mined-mineral: The mineral that is being mined.
-- incident-data: The date the fatality occurred.
-- locationed-processed: This is where I took the last value from the location in order to get the state.
-- state: Using the `reference/state_mapping.csv` file, I mapped the correct state.
+- **report-key**: This is a unique key to identify each report.
+- **report-url**: The url to the fatality report.
+- **accident-classification**: The classification of the accident
+- **location**: The unprocessed location text.
+- **mine-type**: The type of mine.
+- **mine-controller**: The controller over the mine.
+- **mined-mineral**: The mineral that is being mined.
+- **incident-data**: The date the fatality occurred.
+- **locationed-processed**: This is where I took the last value from the location in order to get the state.
+- **state**: Using the `reference/state_mapping.csv` file, I mapped the correct state.
 
 The second main method is the `extract_final_report_description()` where I pull out the Description of the Accident from the Final Report.  Since there are multiple sections within the final report and there are two different ways this section is labeled in the Final Report, I loop through each report and pull out whether it is `description of accident` or `description of the accident`.  Once extracted, I only keep the letters and spaces.  
 
@@ -71,10 +71,10 @@ Using the `data/base_fatality_reports.csv` file, I imported it into Tableau and 
 
 In this dashboard, I created the following visuals:
 
-- *Fatality by State* - This is a heat map that shows the states that have the most and least amount of reported fatalities.
-- *Accident Classification* - A bar graph showing the amounts of each type of accident.
-- *Mine Controller* - A bar that shows the amount of fatalities by each mine controller.
-- *Fatalities over Time* - A line graph that shows the amount of trend of reported fatalities over time.
+- **Fatality by State** - This is a heat map that shows the states that have the most and least amount of reported fatalities.
+- **Accident Classification** - A bar graph showing the amounts of each type of accident.
+- **Mine Controller** - A bar that shows the amount of fatalities by each mine controller.
+- **Fatalities over Time** - A line graph that shows the amount of trend of reported fatalities over time.
 
 ## Team Contribution
 
