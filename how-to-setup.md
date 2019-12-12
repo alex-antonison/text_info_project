@@ -17,6 +17,12 @@ It is suggested but not necessary to use a form of environment management such a
 2. Once you have chrome installed, you will then need to go to the chrome driver website, [Chrome Drivers](https://chromedriver.chromium.org/downloads), and download an appropriate chrome driver for your system and unzip it to the `chromedriver/` directory.
 3. With python and a chrome driver setup, you will be ready to run the web scraping python script.  The [run_scraper.sh](run_scraper.sh) script is an example of how to run it with a `text_info` virutalenv environment.  The script requires two arguments.  The first argument is the path to the chrome driver and the second argument is a True or False value to indicate if you want to scrape all of the pages or just the first page.  It is recommended for development or demonstration purposes to set this to False as it takes a bit over an hour to scrape all reports.
 
-## Text Prep-processing Setup
+## Text Processing Setup
+
+The [text_processing.py](text_processing.py) script only requires pandas to be installed. This would have been taken care of during the python setup.
+
+## Text Analysis Setup
 
 ## Data Visualization Setup
+
+To demo the dashboard, all you need to do is go to [Mining Fatality Report Dashboard](https://public.tableau.com/profile/alexander.d.antonison#!/vizhome/MiningFatalityReportsDashboard/MiningFatalityReportDashboard).
