@@ -46,6 +46,10 @@ The three main methods are the `get_report_pages`, `scrape_fatality_reports`, an
 
 Stuff here about text pre-processing implementation details
 
+### Topic Analysis
+
+Stuff about topic analysis
+
 ### Data Visualization
 
 Stuff here about data visualization
