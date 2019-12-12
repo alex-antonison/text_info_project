@@ -44,7 +44,7 @@ The three main methods are the `get_report_pages`, `scrape_fatality_reports`, an
 
 ### Text Pre-processing
 
-In this script, using pandas, I read in the `data/report_info.json` file and have two main methods.  The first method, `create_base_report()` pulls out the following text columns:
+In this script, using pandas, I read in the `data/report_info.json` file and process the file with two main methods.  The first method, `create_base_report()`, pulls out the following text columns:
 
 - **report-key**: This is a unique key to identify each report.
 - **report-url**: The url to the fatality report.
