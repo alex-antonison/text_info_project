@@ -46,7 +46,7 @@ The three main methods are the `get_report_pages`, `scrape_fatality_reports`, an
 
 Stuff here about text pre-processing implementation details
 
-### Topic Analysis
+### Text Analysis
 
 Stuff about topic analysis
 
@@ -59,18 +59,18 @@ Stuff here about data visualization
 ### Alex Antonison (ada4)
 
 - Alex helped write the project proposal by specifying the technologies and methodologies to be used as well as provide a rough timeline.
-- Alex helped write the documentation around the code submission with an emphasis on the web scraping section.
 - Alex wrote the web scraper that pulled all of the fatality reports into a json document.
+- Alex developed a text processing script that processed the web-scraped results into a csv file for analysis and data visualization.
+- Alex created a tableau dashboard of the scraped data.
+- Alex helped write the documentation around the code submission with an emphasis on the web scraping section, text processing, and dashboard of results.
+
+### Amartya Roy Chowdhury (amartya4)
+
+- Amartya helped write the proposal by researching existing solutions within this space as well as seeing if there were any existing resources we could use in order to gain better insights into mining fatalities.
+- Amartya performed text analysis and topic analysis on the description of the accident from the fatality report.
+- Amartya helped write the documentation around the code submission with an emphasis on the text pre-processing section.
 
 ### Sai Rao (sairao2)
 
 - Sai helped write the project proposal by writing the function of the tool, who will benefit from the tool, and how we will demonstrate the usefulness of the tool.
 - Sai came up with the overall project idea and acted as a subject matter expert as he works in the mining industry.
-- Sai developed and implemented the data visualizations to provide meaningful insights into mining fatalities.
-- Sai helped write the documentation around the code submission with an emphasis on the data visualization section.
-
-### Amartya Roy Chowdhury (amartya4)
-
-- Amartya helped write the proposal by researching existing solutions within this space as well as seeing if there were any existing resources we could use in order to gain better insights into mining fatalities.
-- Amartya wrote the text pre-processing script that processed the web scraped information into a tabular format for analysis.
-- Amartya helped write the documentation around the code submission with an emphasis on the text pre-processing section.
