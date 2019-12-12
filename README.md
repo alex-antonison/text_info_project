@@ -71,10 +71,10 @@ Using the `data/base_fatality_reports.csv` file, I imported it into Tableau and 
 
 In this dashboard, I created the following visuals:
 
-- Fatality by State - This is a heat map that shows the states that have the most and least amount of reported fatalities.
-- Accident Classification - A bar graph showing the amounts of each type of accident.
-- Mine Controller - A bar that shows the amount of fatalities by each mine controller.
-- Fatalities over Time - A line graph that shows the amount of trend of reported fatalities over time.
+- *Fatality by State* - This is a heat map that shows the states that have the most and least amount of reported fatalities.
+- *Accident Classification* - A bar graph showing the amounts of each type of accident.
+- *Mine Controller* - A bar that shows the amount of fatalities by each mine controller.
+- *Fatalities over Time* - A line graph that shows the amount of trend of reported fatalities over time.
 
 ## Team Contribution
 
