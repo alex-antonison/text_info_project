@@ -28,7 +28,7 @@ This project has three main parts to it.
 
 ### Web Scraping
 
-The webscraper part of the project was built using a combination of the python packges [selenium](https://selenium.dev/) and [beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) and [chromedriver](https://chromedriver.chromium.org/downloads) for the WebDriver.
+The webscraper, [scrapery.py](scraper.py), part of the project was built using a combination of the python packges [selenium](https://selenium.dev/) and [beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) and [chromedriver](https://chromedriver.chromium.org/downloads) for the WebDriver.
 
 - `selenium` was used with the `chromedriver` in order to navigate to the desired websites and pull down the html to then be processed.
 - `beautifulsoup4` was used in order to parse the html and pull out desired information from the fatality reports.
@@ -44,7 +44,7 @@ The three main methods are the `get_report_pages`, `scrape_fatality_reports`, an
 
 ### Text Pre-processing
 
-In this script, using pandas, I read in the `data/report_info.json` file and process the file with two main methods.  The first method, `create_base_report()`, pulls out the following text columns:
+In the text processing script, [text_processing.py](text_processing.py), using the `pandas` library, I read in the `data/report_info.json` file and process the file with two main methods.  The first method, `create_base_report()`, pulls out the following text columns:
 
 - **report-key**: This is a unique key to identify each report.
 - **report-url**: The url to the fatality report.
