@@ -44,7 +44,22 @@ The three main methods are the `get_report_pages`, `scrape_fatality_reports`, an
 
 ### Text Pre-processing
 
-Stuff here about text pre-processing implementation details
+In this script, using pandas, I read in the `data/report_info.json` file and have two main methods.  The first method, `create_base_report()` pulls out the following text columns:
+
+- report-key: This is a unique key to identify each report.
+- report-url: The url to the fatality report.
+- accident-classification: The classification of the accident
+- location: The unprocessed location text.
+- mine-type: The type of mine.
+- mine-controller: The controller over the mine.
+- mined-mineral: The mineral that is being mined.
+- incident-data: The date the fatality occurred.
+- locationed-processed: This is where I took the last value from the location in order to get the state.
+- state: Using the `reference/state_mapping.csv` file, I mapped the correct state.
+
+The second main method is the `extract_final_report_description()` where I pull out the Description of the Accident from the Final Report.  Since there are multiple sections within the final report and there are two different ways this section is labeled in the Final Report, I loop through each report and pull out whether it is `description of accident` or `description of the accident`.  Once extracted, I only keep the letters and spaces.  
+
+Once the single value columns and the Description of Accident have been extracted, I will merge these together and save them to a pipe delimited csv file at `data/base_fatality_reports.csv`.
 
 ### Text Analysis
 
@@ -52,7 +67,14 @@ Stuff about topic analysis
 
 ### Data Visualization
 
-Stuff here about data visualization
+Using the `data/base_fatality_reports.csv` file, I imported it into Tableau and created a dashboard and public it to Tableau Public - [Mining Fatality Report Dashboard](https://public.tableau.com/profile/alexander.d.antonison#!/vizhome/MiningFatalityReportsDashboard/MiningFatalityReportDashboard).
+
+In this dashboard, I created the following visuals:
+
+- Fatality by State - This is a heat map that shows the states that have the most and least amount of reported fatalities.
+- Accident Classification - A bar graph showing the amounts of each type of accident.
+- Mine Controller - A bar that shows the amount of fatalities by each mine controller.
+- Fatalities over Time - A line graph that shows the amount of trend of reported fatalities over time.
 
 ## Team Contribution
 
@@ -62,13 +84,13 @@ Stuff here about data visualization
 - Alex wrote the web scraper that pulled all of the fatality reports into a json document.
 - Alex developed a text processing script that processed the web-scraped results into a csv file for analysis and data visualization.
 - Alex created a tableau dashboard of the scraped data.
-- Alex helped write the documentation around the code submission with an emphasis on the web scraping section, text processing, and dashboard of results.
+- Alex helped write the documentation around the code submission with an emphasis on the web scraping section, text processing, and a dashboard of results.
 
 ### Amartya Roy Chowdhury (amartya4)
 
 - Amartya helped write the proposal by researching existing solutions within this space as well as seeing if there were any existing resources we could use in order to gain better insights into mining fatalities.
-- Amartya performed text analysis and topic analysis on the description of the accident from the fatality report.
-- Amartya helped write the documentation around the code submission with an emphasis on the text pre-processing section.
+- Amartya performed text and topic analysis on the description of the accident from the fatality report.
+- Amartya helped write the documentation around the code submission with an emphasis on the text and topic analysis section.
 
 ### Sai Rao (sairao2)
 
