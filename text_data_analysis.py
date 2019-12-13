@@ -97,7 +97,7 @@ def doing_data_analysis(bag_of_words,col_name,number_topics,number_words):
 
 
 def main():
-    candidate_col = pd.read_csv('final_Report.csv')
+    candidate_col = pd.read_csv('data/final_Report.csv')
  #   candidate_col = candidate_col.drop(columns=[
  #   'report-url', 'accidnet-classification', 'location', 'mine-type', 'mine-controller', 'mined-mineral', 'incident-date', 'public-notice','fatality-alert','final-report'], axis=1)
     # Print out the first rows of candidate_col
