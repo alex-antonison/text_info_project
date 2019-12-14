@@ -22,11 +22,12 @@ The second target audience set would be the government agency itself, MSHA, as t
 
 ## Technology Overview
 
-This project has three main parts to it.  
+This project has four main parts to it.  
 
 1. The first part involves scraping the fatality reports from the [msha.gov](https://www.msha.gov/).
-2. The second part involves writing a text pre-processing script that will take the raw web scraped report data and transform it into a tabular format for data visualization.  Additionally, we will be performing text analysis on the report text in order to gain additional insights into the fatalities.
-3. The third and final part is building data visualizations to allow for an end user to explore the scraped and analyzed data.
+2. The second part involves writing a text processing script that will take the raw web scraped report data and transform it into a tabular format for data visualization.  
+3. The third part involves performing text analysis on the report text in order to gain additional insights into the fatalities.
+4. The fourth and final part is building data visualizations to allow for an end user to explore the scraped and analyzed data.
 
 ## Implementation Details
 
@@ -46,7 +47,7 @@ The web scraper was built by creating a single class, `Scraper` that was initial
 
 The three main methods are the `get_report_pages()`, `scrape_fatality_reports()`, and `save_report()`.  The `get_report_pages()` goes through and finds the different report keys for each fatality report.  This could then be used in combination with the base url, `https://www.msha.gov`, in order to access each individual report page.  Once the report keys were gathered, the `scrape_fatality_reports()` method would extract the information it could from the main website and then use additional support methods to pull in the public notice, preliminary report, fatality alert, and the final report if they existed for this given fatality.  This aspect proved challenging as logic had to be put in place to account for some mining fatalities that did not include all of this information.  Once all of the reports were gathered, the `save_report()` method was used to dump the scraped fatality report information to `data/report_info.json`.  A json format was used in order to allow for easy saving and storing of the raw webscraped data.  The following text pre-processing section will then transform it into a more analysis and visualization tabular format.
 
-### Text Pre-processing
+### Text Processing
 
 In the text processing script, [text_processing.py](text_processing.py), using the `pandas` library, I read in the `data/report_info.json` file and process the file with two main methods.  The first method, `create_base_report()`, pulls out the following text columns:
 
