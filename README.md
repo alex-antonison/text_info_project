@@ -70,8 +70,29 @@ Once the single value columns and the Description of Accident have been extracte
 
 ### Text Analysis
 
-Stuff about topic analysis
+In the text analysis,[data_extraction.py][test_data_analysis.py], using panda , numpy I craeted the file final_Report.csv.
+This file later use for test data analysis where we use wordcloud, sklearn, pyplot and use Wordcloud and CountVectorizer
 
+These are the steps followed while doing the text analysis :
+    1. Getting each column for processing
+    2. Adding those and creating a word cloud to check the max occurance
+    3. Showing a graph and plaotting it based on the 10 most common use words
+    4. Performing LDA based on the column with number of words and number of topic
+
+I have performed the above mentioned steps on the following column that we got it from the 
+    #   doing text analysis for the location
+    doing_data_analysis(candidate_col['location'],'location',5,1)
+    #   doing text analysis for the preliminary-report
+    doing_data_analysis(candidate_col['preliminary-report'],'report',5,10)
+     #   doing text analysis for the mine-type
+    doing_data_analysis(candidate_col['mine-type'],'mine-type',5,1)
+     #   doing text analysis for the mine-controller
+    doing_data_analysis(candidate_col['mine-controller'],'mine-controller',5,10)
+     #   doing text analysis for the accidnet-classification
+    doing_data_analysis(candidate_col['accidnet-classification'],'accidnet-classification',5,10)
+     #   doing text analysis for the fatality-alert
+    doing_data_analysis(candidate_col['fatality-alert'],'fatality-alert',5,50)
+    
 Visual results of the analysis can be seen here: [Text Analysis](https://docs.google.com/presentation/d/1fxkN5NJBxpQoWd3jC5f8moAVshV1y13IscYCLTyZIVE/edit?usp=sharing)
 
 ### Data Visualization
