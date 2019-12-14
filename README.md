@@ -69,6 +69,8 @@ Once the single value columns and the Description of Accident have been extracte
 
 Stuff about topic analysis
 
+Visual results of the analysis can be seen here: [Text Analysis](https://drive.google.com/file/d/1Aq6TfRJBRT-DZ64ZiOTEbgiVt773YowO/view?usp=sharing)
+
 ### Data Visualization
 
 Using the `data/base_fatality_reports.csv` file, I imported it into Tableau and created a dashboard and public it to Tableau Public - [Mining Fatality Report Dashboard](https://public.tableau.com/profile/alexander.d.antonison#!/vizhome/MiningFatalityReportsDashboard/MiningFatalityReportDashboard).
