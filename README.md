@@ -8,7 +8,9 @@
 
 ## Presentation Slides
 
-The presentation slides can be viewed here: [Scraping, Analyzing, and Visualizing Mining Fatality Reports](https://docs.google.com/presentation/d/1ihBSnO-p16Uv5S7562miP8eP0OeEq_xLSv_Jzva0GWY/edit?usp=sharing)
+The presentation slides can be viewed here: [Scraping, Analyzing, and Visualizing Mining Fatality Reports Presentation](https://docs.google.com/presentation/d/1ihBSnO-p16Uv5S7562miP8eP0OeEq_xLSv_Jzva0GWY/edit?usp=sharing)
+
+The video of the presentation can be viewed here: [Scraping, Analyzing, and Visualizing Mining Fatality Reports Video](https://drive.google.com/file/d/1HFknuYEFxGMHaN-37iJHVYMWQCG4lvgs/view?usp=sharing)
 
 ## Purpose
 
