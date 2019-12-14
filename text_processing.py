@@ -131,18 +131,24 @@ class TextProcess(object):
         This method is used create the two different dataframes
         and output a final combined dataframe for further analysis.
         """
+        print("Processing initial json file...")
         json_df = self.process_initial_json()
 
+        print("Processing final report...")
         report_df = self.extract_final_report_description(json_df)
 
+        print("Processing base columns...")
         base_df = self.create_base_report(json_df)
 
+        print("Combining processed report and base columns...")
         combined_df = base_df.merge(report_df, on='report-key', how='left')
 
+        print("Saving file to", self.output_file)
         combined_df.to_csv(self.output_file, index=False, sep="|")
 
 
 def main():
+    print("Initializing text processing object...")
     tp = TextProcess('data/report_info.json', 'data/base_fatality_reports.csv')
 
     tp.process_text()
