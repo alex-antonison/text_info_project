@@ -69,7 +69,7 @@ Once the single value columns and the Description of Accident have been extracte
 
 Stuff about topic analysis
 
-Visual results of the analysis can be seen here: [Text Analysis](https://drive.google.com/file/d/1Aq6TfRJBRT-DZ64ZiOTEbgiVt773YowO/view?usp=sharing)
+Visual results of the analysis can be seen here: [Text Analysis](https://docs.google.com/presentation/d/1fxkN5NJBxpQoWd3jC5f8moAVshV1y13IscYCLTyZIVE/edit?usp=sharing)
 
 ### Data Visualization
 
