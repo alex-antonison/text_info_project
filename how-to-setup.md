@@ -25,6 +25,15 @@ The [text_processing.py](text_processing.py) script only requires pandas to be i
 
 ## Text Analysis Setup
 
+The [text_data_analysis.py](text_data_analysis.py) script requires the following packages (included in requirements.txt):
+
+- sklearn
+- wordcloud
+- numpy
+- matplotlib
+- pandas
+- seaborn
+
 ## Dashboard Usage
 
 To demo the dashboard, all you need to do is go to [Mining Fatality Report Dashboard](https://public.tableau.com/profile/alexander.d.antonison#!/vizhome/MiningFatalityReportsDashboard/MiningFatalityReportDashboard).  From there, you can select any of the states in the heat map to filter the dashboard to that state.
