@@ -1,10 +1,14 @@
-# text_info_project
+# Scraping, Analyzing, and Visualizing Mining Fatality Reports
 
 ## Team Members
 
 - Alexander Antonison (ada4) - Team Lead
 - Sai Rao (sairao2)
 - Amartya Roy Chowdhury (amartya4)
+
+## Presentation Slides
+
+The presentation slides can be viewed here: [Scraping, Analyzing, and Visualizing Mining Fatality Reports](https://docs.google.com/presentation/d/1ihBSnO-p16Uv5S7562miP8eP0OeEq_xLSv_Jzva0GWY/edit?usp=sharing)
 
 ## Purpose
 
